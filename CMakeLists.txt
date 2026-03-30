@@ -58,64 +58,66 @@ target_include_directories(GVerb
         $<TARGET_PROPERTY:PluginAssets,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
-add_custom_command(TARGET GVerb_Standalone POST_BUILD
-        COMMAND xattr -cr "$<TARGET_BUNDLE_DIR:GVerb_Standalone>"
-        COMMAND codesign --force --deep -s - "$<TARGET_BUNDLE_DIR:GVerb_Standalone>"
-)
+if (APPLE)
+        add_custom_command(TARGET GVerb_Standalone POST_BUILD
+                COMMAND xattr -cr "$<TARGET_BUNDLE_DIR:GVerb_Standalone>"
+                COMMAND codesign --force --deep -s - "$<TARGET_BUNDLE_DIR:GVerb_Standalone>"
+        )
 
-add_custom_command(TARGET GVerb_VST3 POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E rm -rf
-        "${CMAKE_BINARY_DIR}/pkg_staging"
-        COMMAND ${CMAKE_COMMAND} -E make_directory
-        "${CMAKE_BINARY_DIR}/pkg_staging/Library/Audio/Plug-Ins/VST3"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "$<TARGET_BUNDLE_DIR:GVerb_VST3>"
-        "${CMAKE_BINARY_DIR}/pkg_staging/Library/Audio/Plug-Ins/VST3/GVerb.vst3"
-        COMMAND codesign --force -s -
-        "${CMAKE_BINARY_DIR}/pkg_staging/Library/Audio/Plug-Ins/VST3/GVerb.vst3"
-        COMMAND pkgbuild
-        --root "${CMAKE_BINARY_DIR}/pkg_staging"
-        --install-location "/"
-        --identifier "com.gnpe.gverb"
-        --version "1.0.0"
-        "${CMAKE_BINARY_DIR}/GVerb.pkg"
-)
+        add_custom_command(TARGET GVerb_VST3 POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E rm -rf
+                "${CMAKE_BINARY_DIR}/pkg_staging"
+                COMMAND ${CMAKE_COMMAND} -E make_directory
+                "${CMAKE_BINARY_DIR}/pkg_staging/Library/Audio/Plug-Ins/VST3"
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "$<TARGET_BUNDLE_DIR:GVerb_VST3>"
+                "${CMAKE_BINARY_DIR}/pkg_staging/Library/Audio/Plug-Ins/VST3/GVerb.vst3"
+                COMMAND codesign --force -s -
+                "${CMAKE_BINARY_DIR}/pkg_staging/Library/Audio/Plug-Ins/VST3/GVerb.vst3"
+                COMMAND pkgbuild
+                --root "${CMAKE_BINARY_DIR}/pkg_staging"
+                --install-location "/"
+                --identifier "com.gnpe.gverb"
+                --version "1.0.0"
+                "${CMAKE_BINARY_DIR}/GVerb.pkg"
+        )
 
-add_custom_command(TARGET GVerb_AU POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E rm -rf
-        "${CMAKE_BINARY_DIR}/au_staging"
-        COMMAND ${CMAKE_COMMAND} -E make_directory
-        "${CMAKE_BINARY_DIR}/au_staging/Library/Audio/Plug-Ins/Components"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "$<TARGET_BUNDLE_DIR:GVerb_AU>"
-        "${CMAKE_BINARY_DIR}/au_staging/Library/Audio/Plug-Ins/Components/GVerb.component"
-        COMMAND codesign --force -s -
-        "${CMAKE_BINARY_DIR}/au_staging/Library/Audio/Plug-Ins/Components/GVerb.component"
-        COMMAND pkgbuild
-        --root "${CMAKE_BINARY_DIR}/au_staging"
-        --install-location "/"
-        --identifier "com.gnpe.gverbau"
-        --version "1.0.0"
-        "${CMAKE_BINARY_DIR}/GVerbAU.pkg"
-)
+        add_custom_command(TARGET GVerb_AU POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E rm -rf
+                "${CMAKE_BINARY_DIR}/au_staging"
+                COMMAND ${CMAKE_COMMAND} -E make_directory
+                "${CMAKE_BINARY_DIR}/au_staging/Library/Audio/Plug-Ins/Components"
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "$<TARGET_BUNDLE_DIR:GVerb_AU>"
+                "${CMAKE_BINARY_DIR}/au_staging/Library/Audio/Plug-Ins/Components/GVerb.component"
+                COMMAND codesign --force -s -
+                "${CMAKE_BINARY_DIR}/au_staging/Library/Audio/Plug-Ins/Components/GVerb.component"
+                COMMAND pkgbuild
+                --root "${CMAKE_BINARY_DIR}/au_staging"
+                --install-location "/"
+                --identifier "com.gnpe.gverbau"
+                --version "1.0.0"
+                "${CMAKE_BINARY_DIR}/GVerbAU.pkg"
+        )
 
-add_custom_command(TARGET GVerb_CLAP POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E rm -rf
-        "${CMAKE_BINARY_DIR}/clap_staging"
-        COMMAND ${CMAKE_COMMAND} -E make_directory
-        "${CMAKE_BINARY_DIR}/clap_staging/Library/Audio/Plug-Ins/CLAP"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "$<TARGET_BUNDLE_DIR:GVerb_CLAP>"
-        "${CMAKE_BINARY_DIR}/clap_staging/Library/Audio/Plug-Ins/CLAP/GVerb.clap"
-        COMMAND codesign --force -s -
-        "${CMAKE_BINARY_DIR}/clap_staging/Library/Audio/Plug-Ins/CLAP/GVerb.clap"
-        COMMAND pkgbuild
-        --root "${CMAKE_BINARY_DIR}/clap_staging"
-        --install-location "/"
-        --identifier "com.gnpe.gverb"
-        --version "1.0.0"
-        "${CMAKE_BINARY_DIR}/GVerbCLAP.pkg"
-)
+        add_custom_command(TARGET GVerb_CLAP POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E rm -rf
+                "${CMAKE_BINARY_DIR}/clap_staging"
+                COMMAND ${CMAKE_COMMAND} -E make_directory
+                "${CMAKE_BINARY_DIR}/clap_staging/Library/Audio/Plug-Ins/CLAP"
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "$<TARGET_BUNDLE_DIR:GVerb_CLAP>"
+                "${CMAKE_BINARY_DIR}/clap_staging/Library/Audio/Plug-Ins/CLAP/GVerb.clap"
+                COMMAND codesign --force -s -
+                "${CMAKE_BINARY_DIR}/clap_staging/Library/Audio/Plug-Ins/CLAP/GVerb.clap"
+                COMMAND pkgbuild
+                --root "${CMAKE_BINARY_DIR}/clap_staging"
+                --install-location "/"
+                --identifier "com.gnpe.gverb"
+                --version "1.0.0"
+                "${CMAKE_BINARY_DIR}/GVerbCLAP.pkg"
+        )
+endif()
 
 target_compile_definitions(GVerb
         PUBLIC
