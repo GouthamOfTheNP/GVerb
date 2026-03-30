@@ -49,6 +49,7 @@ After a successful build the following are produced:
 |--------|--------|
 | `GVerb_VST3` | `build/GVerb.pkg` — installer for `/Library/Audio/Plug-Ins/VST3/` |
 | `GVerb_AU` | `build/GVerbAU.pkg` — installer for `/Library/Audio/Plug-Ins/Components/` |
+| `GVerb_CLAP` | `build/GverbCLAP.pkg` —  installer for `/Library/Audio/Plug-Ins/CLAP/` |
 | `GVerb_Standalone` | Ad-hoc signed `.app` bundle |
 
 Install a `.pkg` by double-clicking it, then rescan plugins in your DAW.
@@ -62,9 +63,11 @@ GVerb/
 ├── assets/
 │   ├── icon_big.png        # Plugin icon
 │   ├── bottom_pic.png      # UI decorative image
-│   └── Neuropol.otf        # Title font (embedded via BinaryData)
+|   ├── Neuropol.otf        # Title font (embedded via BinaryData)
+|   └── Fragile Bombers.otf # Unused textfont (embedded via BinaryData)
 ├── libs/
 │   └── JUCE/               # JUCE submodule
+├── clap-juce-extensions    # CLAP format compilation
 ├── main.cpp                # GVerbProcessor + GVerbEditor
 └── CMakeLists.txt
 ```
