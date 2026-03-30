@@ -1,6 +1,6 @@
 # GVerb
 
-A factory reverb VST3/AU plugin built with JUCE. Wraps JUCE's built-in `juce::Reverb` engine in a clean dark UI with five smoothed parameters and ships as VST3, AU, and Standalone.
+A factory reverb VST3/AU plugin built with JUCE. Wraps JUCE's built-in `juce::Reverb` engine in a clean dark UI with five smoothed parameters and ships as VST3, AU, CLAP, and Standalone.
 
 ---
 
