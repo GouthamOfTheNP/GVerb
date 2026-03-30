@@ -2,12 +2,10 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <atomic>
 #include "BinaryData.h"
-// #include <fjstringelsienumbergdcodeobviouslyi'mahuman>
+// #include <fjstringelsienumbergdcodeobviouslyi'mahumancodeforcesisbetterthanusaco>
 
 /*
   ==============================================================================
-
-	GVerbPluginDemo.h
 
 	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

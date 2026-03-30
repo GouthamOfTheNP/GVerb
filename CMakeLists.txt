@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.22)
-project(SampleAnalyzer VERSION 0.0.1)
+project(SampleAnalyzer VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(libs/JUCE)
+add_subdirectory(clap-juce-extensions)
 
 juce_add_plugin(GVerb
         PRODUCT_NAME "GVerb"
@@ -17,6 +18,12 @@ juce_add_plugin(GVerb
         DESCRIPTION "Factory reverb plugin"
         ICON_BIG ${CMAKE_SOURCE_DIR}/assets/icon_big.png
         ICON_SMALL ${CMAKE_SOURCE_DIR}/assets/icon_big.png
+)
+
+clap_juce_extensions_plugin(
+        TARGET GVerb
+        CLAP_ID "com.gnpe.gverb"
+        CLAP_FEATURES "reverb"
 )
 
 file(GLOB_RECURSE PLUGIN_ASSETS "assets/*.*")
@@ -67,7 +74,7 @@ add_custom_command(TARGET GVerb_VST3 POST_BUILD
         --root "${CMAKE_BINARY_DIR}/pkg_staging"
         --install-location "/"
         --identifier "com.gnpe.gverb"
-        --version "0.0.1"
+        --version "1.0.0"
         "${CMAKE_BINARY_DIR}/GVerb.pkg"
 )
 
@@ -85,8 +92,26 @@ add_custom_command(TARGET GVerb_AU POST_BUILD
         --root "${CMAKE_BINARY_DIR}/au_staging"
         --install-location "/"
         --identifier "com.gnpe.gverbau"
-        --version "0.0.1"
+        --version "1.0.0"
         "${CMAKE_BINARY_DIR}/GVerbAU.pkg"
+)
+
+add_custom_command(TARGET GVerb_CLAP POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E rm -rf
+        "${CMAKE_BINARY_DIR}/clap_staging"
+        COMMAND ${CMAKE_COMMAND} -E make_directory
+        "${CMAKE_BINARY_DIR}/clap_staging/Library/Audio/Plug-Ins/CLAP"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "$<TARGET_BUNDLE_DIR:GVerb_CLAP>"
+        "${CMAKE_BINARY_DIR}/clap_staging/Library/Audio/Plug-Ins/CLAP/GVerb.clap"
+        COMMAND codesign --force -s -
+        "${CMAKE_BINARY_DIR}/clap_staging/Library/Audio/Plug-Ins/CLAP/GVerb.clap"
+        COMMAND pkgbuild
+        --root "${CMAKE_BINARY_DIR}/clap_staging"
+        --install-location "/"
+        --identifier "com.gnpe.gverb"
+        --version "1.0.0"
+        "${CMAKE_BINARY_DIR}/GVerbCLAP.pkg"
 )
 
 target_compile_definitions(GVerb
