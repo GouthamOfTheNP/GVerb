@@ -6,7 +6,4 @@
 	url = https://github.com/juce-framework/JUCE.git
 [submodule "clap-juce-extensions"]
 	path = clap-juce-extensions
-	url = /clap-juce-extensions
-[submodule "libs"]
-	path = libs
-	url = ./libs
+	url = https://github.com/free-audio/clap-juce-extensions.git
