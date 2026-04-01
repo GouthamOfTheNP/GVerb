@@ -34,8 +34,9 @@ private:
 
 	std::atomic<bool> paramsUpdated { true };
 
+
 	static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
-	void syncReverbParams();
+	void syncReverbParams(int numSamples);
 
 
 public:
@@ -55,7 +56,7 @@ public:
 	void releaseResources() override;
 
 	// Provides information to DAW for setting state
-	void getStateInformation(juce::MemoryBlock& dest_data) override;
+	void getStateInformation(juce::MemoryBlock& destData) override;
 
 	// Gets state from DAW
 	void setStateInformation(const void* data, int size) override;

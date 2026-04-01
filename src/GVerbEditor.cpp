@@ -97,7 +97,7 @@ dryLevelAttachment(p.treeState, "dryLevel", dryLevelSlider)
 
 void GVerbEditor::resized()
 {
-	auto area = getLocalBounds();
+	juce::Rectangle<int> area = getLocalBounds();
 	area.removeFromTop(40);
 	auto leftArea = area.removeFromLeft(area.getWidth() / 2 + 50).reduced(20);
 	leftArea.removeFromTop(30);

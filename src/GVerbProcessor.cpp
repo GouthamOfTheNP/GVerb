@@ -25,14 +25,14 @@ void GVerbProcessor::prepareToPlay(const double sampleRate, int samplesPerBlock)
 	width.reset(sampleRate, 0.05);
 	dryLevel.reset(sampleRate, 0.05);
 
-	syncReverbParams();
+	syncReverbParams(samplesPerBlock);
 }
 
 void GVerbProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
 	if (paramsUpdated.exchange(false))
 	{
-		syncReverbParams();
+		syncReverbParams(buffer.getNumSamples());
 	}
 
 	if (buffer.getNumChannels() >= 2)
@@ -53,7 +53,7 @@ void GVerbProcessor::releaseResources()
 	reverb.reset();
 }
 
-void GVerbProcessor::syncReverbParams()
+void GVerbProcessor::syncReverbParams(int numSamples)
 {
 	// Receiving params from APVTS
 	roomSize.setTargetValue(*roomSizeValue);
@@ -63,20 +63,20 @@ void GVerbProcessor::syncReverbParams()
 	dryLevel.setTargetValue(*dryLevelValue);
 
 	// Setting params
-	params.roomSize = roomSize.getNextValue();
-	params.damping = damping.getNextValue();
-	params.width = width.getNextValue();
-	params.wetLevel = wetLevel.getNextValue();
-	params.dryLevel = dryLevel.getNextValue();
+	params.roomSize = roomSize.skip(numSamples);
+	params.damping = damping.skip(numSamples);
+	params.width = width.skip(numSamples);
+	params.wetLevel = wetLevel.skip(numSamples);
+	params.dryLevel = dryLevel.skip(numSamples);
 
 	reverb.setParameters(params);
 }
 
-void GVerbProcessor::getStateInformation(juce::MemoryBlock& dest_data)
+void GVerbProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
 	const auto state = treeState.copyState();
 	const std::unique_ptr xml (state.createXml());
-	copyXmlToBinary (*xml, dest_data);
+	copyXmlToBinary(*xml, destData);
 }
 
 void GVerbProcessor::setStateInformation(const void* data, const int size)
@@ -92,39 +92,38 @@ void GVerbProcessor::setStateInformation(const void* data, const int size)
 
 juce::AudioProcessorValueTreeState::ParameterLayout GVerbProcessor::createParameterLayout()
 {
-	juce::AudioProcessorValueTreeState::ParameterLayout layout;
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(
-		"roomSize", "Room Size",
-		juce::NormalisableRange(0.0f, 1.0f), defaultRoomSize, juce::AudioParameterFloatAttributes().withValueFromStringFunction(
-			[](const juce::String& s) { return s.getFloatValue(); }).withStringFromValueFunction(
-			[](const float v, int) { return juce::String(v, 2); })));
+    struct ParamSpec
+    {
+        const char* id;
+        const char* name;
+        float defaultValue;
+    };
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(
-		"damping", "Damping",
-		juce::NormalisableRange(0.0f, 1.0f), defaultDamping, juce::AudioParameterFloatAttributes().withValueFromStringFunction(
-			[](const juce::String& s) { return s.getFloatValue(); }).withStringFromValueFunction(
-			[](const float v, int) { return juce::String(v, 2); })));
+	constexpr std::array<ParamSpec, 5> params {{
+        { "roomSize", "Room Size", defaultRoomSize },
+        { "damping", "Damping", defaultDamping },
+        { "width", "Width", defaultWidth },
+        { "wetLevel", "Wet Level", defaultWetLevel },
+        { "dryLevel", "Dry Level", defaultDryLevel }
+    }};
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(
-		"width", "Width",
-		juce::NormalisableRange(0.0f, 1.0f), defaultWidth, juce::AudioParameterFloatAttributes().withValueFromStringFunction(
-			[](const juce::String& s) { return s.getFloatValue(); }).withStringFromValueFunction(
-			[](const float v, int) { return juce::String(v, 2); })));
+    for (const auto& [id, name, defaultValue] : params)
+    {
+        layout.add(std::make_unique<juce::AudioParameterFloat>(
+        	id, name, juce::NormalisableRange(0.0f, 1.0f), defaultValue,
+            juce::AudioParameterFloatAttributes().withValueFromStringFunction([](const juce::String& s)
+            	{
+                    return s.getFloatValue();
+                })
+                .withStringFromValueFunction([](const float v, int)
+                {
+                    return juce::String(v, 2);
+                })));
+    }
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(
-		"wetLevel", "Wet Level",
-		juce::NormalisableRange(0.0f, 1.0f), defaultWetLevel, juce::AudioParameterFloatAttributes().withValueFromStringFunction(
-			[](const juce::String& s) { return s.getFloatValue(); }).withStringFromValueFunction(
-			[](const float v, int) { return juce::String(v, 2); })));
-
-	layout.add(std::make_unique<juce::AudioParameterFloat>(
-		"dryLevel", "Dry Level",
-		juce::NormalisableRange(0.0f, 1.0f), defaultDryLevel, juce::AudioParameterFloatAttributes().withValueFromStringFunction(
-			[](const juce::String& s) { return s.getFloatValue(); }).withStringFromValueFunction(
-			[](const float v, int) { return juce::String(v, 2); })));
-
-	return layout;
+    return layout;
 }
 
 juce::AudioProcessorEditor* GVerbProcessor::createEditor()
