@@ -40,6 +40,9 @@ juce_generate_juce_header(GVerb)
 target_sources(GVerb
         PRIVATE
         main.cpp
+        src/GVerbEditor.cpp
+        src/GVerbProcessor.cpp
+        src/binary_data/Fonts.cpp
 )
 
 target_link_libraries(GVerb

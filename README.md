@@ -43,7 +43,7 @@ cmake --build build --config Release
 
 ### Outputs
 
-After a successful build the following are produced:
+After a successful build, the following is produced (if on macOS):
 
 | Target | Output |
 |--------|--------|
@@ -63,12 +63,20 @@ GVerb/
 ├── assets/
 │   ├── icon_big.png        # Plugin icon
 │   ├── bottom_pic.png      # UI decorative image
-|   ├── Neuropol.otf        # Title font (embedded via BinaryData)
-|   └── Fragile Bombers.otf # Unused textfont (embedded via BinaryData)
+│   ├── Neuropol.otf        # Title font (embedded via BinaryData)
+│   └── Fragile Bombers.otf # Unused textfont (embedded via BinaryData)
 ├── libs/
 │   └── JUCE/               # JUCE submodule
 ├── clap-juce-extensions    # CLAP format compilation
-├── main.cpp                # GVerbProcessor + GVerbEditor
+├── src/                    # Source files
+│   ├── GVerbProcessor.hpp  # Plugin backend class
+│   ├── GVerbEditor.hpp     # Plugin interface class
+│   ├── GVerbProcessor.cpp  # Implementation of GVerbProcessor
+│   ├── GVerbEditor.cpp     # Implementation of GVerbEditor
+│   └── binary_data/        # Binary data getters folder
+│       ├── Fonts.hpp       # Font data getters
+│       └── Fonts.cpp       # Font data getters implementation
+├── main.cpp                # Runner class
 └── CMakeLists.txt
 ```
 
@@ -90,12 +98,6 @@ Plugin state is serialized to XML via `getStateInformation` / `setStateInformati
 
 ## Notes
 
-- The AU and VST3 installers use ad-hoc code signing (`-s -`). For distribution outside your own machine, replace with a Developer ID certificate.
+- The AU and VST3 installers use ad-hoc code signing (`-s -`). For distribution outside your own machine, replace it with a Developer ID certificate.
 - `VST3_AUTO_MANIFEST` is disabled; VST3 module info is not auto-generated.
 - Tail length reported to the DAW is `roomSize × 5.0` seconds.
-
----
-
-## License
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
