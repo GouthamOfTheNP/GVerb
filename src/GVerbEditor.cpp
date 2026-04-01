@@ -9,7 +9,7 @@ wetLevelAttachment(p.treeState, "wetLevel", wetLevelSlider),
 widthLevelAttachment(p.treeState, "width", widthLevelSlider),
 dryLevelAttachment(p.treeState, "dryLevel", dryLevelSlider)
 {
-	// Adds elements to logical GUI interface
+	// Adds elements to the logical GUI interface
 	addAndMakeVisible(roomSizeSlider);
 	addAndMakeVisible (roomSizeLabel);
 	roomSizeLabel.setText ("Room Size", juce::dontSendNotification);

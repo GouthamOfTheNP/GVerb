@@ -6,13 +6,13 @@ A factory reverb VST3/AU plugin built with JUCE. Wraps JUCE's built-in `juce::Re
 
 ## Parameters
 
-| Parameter | Range | Default | Description |
-|-----------|-------|---------|-------------|
-| Room Size | 0.0 – 1.0 | 0.50 | Controls the size of the simulated room |
-| Damping | 0.0 – 1.0 | 0.30 | High-frequency absorption of the reverb tail |
-| Width | 0.0 – 1.0 | 1.00 | Stereo spread of the wet signal |
-| Wet Level | 0.0 – 1.0 | 0.30 | Mix level of the processed (reverb) signal |
-| Dry Level | 0.0 – 1.0 | 1.00 | Mix level of the unprocessed signal |
+| Parameter | Range     | Default | Description                                  |
+|-----------|-----------|---------|----------------------------------------------|
+| Room Size | 0.0 – 1.0 | 0.50    | Controls the size of the simulated room      |
+| Damping   | 0.0 – 1.0 | 0.30    | High-frequency absorption of the reverb tail |
+| Width     | 0.0 – 1.0 | 1.00    | Stereo spread of the wet signal              |
+| Wet Level | 0.0 – 1.0 | 0.30    | Mix level of the processed (reverb) signal   |
+| Dry Level | 0.0 – 1.0 | 1.00    | Mix level of the unprocessed signal          |
 
 All parameters are smoothed over 50 ms to prevent zipper noise during automation.
 
@@ -45,12 +45,12 @@ cmake --build build --config Release
 
 After a successful build, the following is produced (if on macOS):
 
-| Target | Output |
-|--------|--------|
-| `GVerb_VST3` | `build/GVerb.pkg` — installer for `/Library/Audio/Plug-Ins/VST3/` |
-| `GVerb_AU` | `build/GVerbAU.pkg` — installer for `/Library/Audio/Plug-Ins/Components/` |
-| `GVerb_CLAP` | `build/GverbCLAP.pkg` —  installer for `/Library/Audio/Plug-Ins/CLAP/` |
-| `GVerb_Standalone` | Ad-hoc signed `.app` bundle |
+| Target             | Output                                                                    |
+|--------------------|---------------------------------------------------------------------------|
+| `GVerb_VST3`       | `build/GVerb.pkg` — installer for `/Library/Audio/Plug-Ins/VST3/`         |
+| `GVerb_AU`         | `build/GVerbAU.pkg` — installer for `/Library/Audio/Plug-Ins/Components/` |
+| `GVerb_CLAP`       | `build/GverbCLAP.pkg` —  installer for `/Library/Audio/Plug-Ins/CLAP/`    |
+| `GVerb_Standalone` | Ad-hoc signed `.app` bundle                                               |
 
 Install a `.pkg` by double-clicking it, then rescan plugins in your DAW.
 

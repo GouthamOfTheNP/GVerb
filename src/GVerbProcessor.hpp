@@ -39,11 +39,11 @@ private:
 public:
 	juce::AudioProcessorValueTreeState treeState;
 
-	// Constructs processor with bus layouts (idk what these do but they are required for the plugin to work) and initializes APVTS pointers
+	// Constructs processor with bus layouts (IDK what these do, but they are required for the plugin to work) and initializes APVTS pointers
 	GVerbProcessor();
 	~GVerbProcessor() override = default;
 
-	// Initializes headless engine when playback starts
+	// Initializes the headless engine when playback starts
 	void prepareToPlay(double sampleRate, int samplesPerBlock) override;
 
 	// Headless processing
