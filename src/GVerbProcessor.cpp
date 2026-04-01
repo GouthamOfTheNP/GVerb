@@ -12,6 +12,7 @@ GVerbProcessor::GVerbProcessor() : AudioProcessor (BusesProperties().withInput("
 	wetLevelValue = treeState.getRawParameterValue("wetLevel");
 	widthValue = treeState.getRawParameterValue("width");
 	dryLevelValue = treeState.getRawParameterValue("dryLevel");
+	treeState.state.addListener(this);
 }
 
 void GVerbProcessor::prepareToPlay(const double sampleRate, int samplesPerBlock)
@@ -29,7 +30,11 @@ void GVerbProcessor::prepareToPlay(const double sampleRate, int samplesPerBlock)
 
 void GVerbProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
-	syncReverbParams();
+	if (paramsUpdated.exchange(false))
+	{
+		syncReverbParams();
+	}
+
 	if (buffer.getNumChannels() >= 2)
 	{
 		float* left_channel_pointer { buffer.getWritePointer(0) };
@@ -63,6 +68,7 @@ void GVerbProcessor::syncReverbParams()
 	params.width = width.getNextValue();
 	params.wetLevel = wetLevel.getNextValue();
 	params.dryLevel = dryLevel.getNextValue();
+
 	reverb.setParameters(params);
 }
 
@@ -124,6 +130,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout GVerbProcessor::createParame
 juce::AudioProcessorEditor* GVerbProcessor::createEditor()
 {
 	return new GVerbEditor(*this);
+}
+
+void GVerbProcessor::valueTreePropertyChanged(juce::ValueTree&, const juce::Identifier&)
+{
+	paramsUpdated.store(true);
 }
 
 

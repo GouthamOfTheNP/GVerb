@@ -3,7 +3,7 @@
 
 class GVerbEditor; // Forward declaration to avoid circular dependency
 
-class GVerbProcessor : public juce::AudioProcessor // Plugin Backend Class
+class GVerbProcessor : public juce::AudioProcessor, public juce::ValueTree::Listener // Plugin Backend Class
 {
 private:
 	// APVTS and processBlock values
@@ -32,9 +32,11 @@ private:
 	std::atomic<float>* wetLevelValue = nullptr;
 	std::atomic<float>* dryLevelValue = nullptr;
 
-	void syncReverbParams();
+	std::atomic<bool> paramsUpdated { true };
 
 	static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+	void syncReverbParams();
+
 
 public:
 	juce::AudioProcessorValueTreeState treeState;
@@ -67,6 +69,7 @@ public:
 	juce::StringArray getAlternateDisplayNames() const override { return { "VVerb", "Venomous Verb", "G-Verb", "GNP Verb", "Goutham's Reverb"}; }
 	double getTailLengthSeconds() const override { return reverb.getParameters().roomSize * 5.0; }
 	bool hasEditor() const override { return true; }
+	void valueTreePropertyChanged(juce::ValueTree&, const juce::Identifier&) override;
 
 	// Required overrides
 	bool acceptsMidi() const override { return false; }
