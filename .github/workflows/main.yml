@@ -15,4 +15,5 @@ jobs:
           tidy-review: true
           format-review: true
           passive-reviews: 0
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           
