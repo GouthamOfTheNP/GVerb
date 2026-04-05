@@ -1,0 +1,18 @@
+name: "Code Checks"
+on: ["push", "pull_request"]
+jobs:
+  analyze:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout Code"
+        uses: "actions/checkout@v4"
+      - name: "C/C++ Linter"
+        uses: "cpp-linter/cpp-linter-action@v2.17.1"
+        with:
+          lines-changed-only: false
+          thread-comments: true
+          no-lgtm: false
+          tidy-review: true
+          format-review: true
+          passive-reviews: 0
+          
