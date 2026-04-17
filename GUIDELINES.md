@@ -35,7 +35,7 @@ These guidelines describe coding style, formatting, and implementation expectati
 
 ### Indentation and Braces
 - Use **4 spaces consistently** within a file.
-- Keep opening braces on the same line for function definitions and control blocks.
+- Keep opening braces below function definitions and control blocks.
 - Prefer compact, readable block structure over deeply nested logic.
 
 ### Spacing
