@@ -9,56 +9,56 @@ wetLevelAttachment(p.treeState, "wetLevel", wetLevelSlider),
 widthLevelAttachment(p.treeState, "width", widthLevelSlider),
 dryLevelAttachment(p.treeState, "dryLevel", dryLevelSlider)
 {
-	// Adds elements to the logical GUI interface
-	addAndMakeVisible(roomSizeSlider);
-	addAndMakeVisible (roomSizeLabel);
-	roomSizeLabel.setText ("Room Size", juce::dontSendNotification);
-	roomSizeLabel.attachToComponent (&roomSizeSlider, false);
-	roomSizeSlider.setSliderStyle(juce::Slider::LinearVertical);
-	roomSizeSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 20);
-	roomSizeLabel.setJustificationType(juce::Justification::centred);
-	roomSizeSlider.setNumDecimalPlacesToDisplay(2);
-	roomSizeSlider.setTooltip("Size of the reverb impulse response");
+	// Adds elements to the logical GUI interface using a struct of pointers, a braced-init loop, and structured bindings
+	struct SliderSpec
+	{
+	    juce::Slider* slider;
+	    juce::Label* label;
+	    const char* text;
+	    const char* tooltip;
+	    juce::Slider::SliderStyle style;
+	};
 
-	addAndMakeVisible(dampingSlider);
-	addAndMakeVisible (dampingLabel);
-	dampingLabel.setText ("Damping", juce::dontSendNotification);
-	dampingLabel.attachToComponent (&dampingSlider, false);
-	dampingSlider.setSliderStyle(juce::Slider::LinearVertical);
-	dampingSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 20);
-	dampingLabel.setJustificationType(juce::Justification::centred);
-	dampingSlider.setNumDecimalPlacesToDisplay(2);
-	dampingSlider.setTooltip("Damping of the reverb impulse response");
+	for (const auto& [slider, label, text, tooltip, style] : {
+		SliderSpec{
+			&roomSizeSlider, &roomSizeLabel, "Room Size",
+			"Makes the reverb feel like it's in a bigger or smaller space. Higher values usually sound more spacious and longer.",
+			juce::Slider::LinearVertical
+		},
+		SliderSpec{
+			&dampingSlider, &dampingLabel, "Damping",
+			"Softens the bright, sharp parts of the reverb. Higher values make the reverb smoother and darker.",
+			juce::Slider::LinearVertical
+		},
+		SliderSpec{
+			&widthLevelSlider, &widthLevelLabel, "Width",
+			"Controls how wide the reverb sounds in stereo. Higher values spread it out more; lower values keep it centered.",
+			juce::Slider::LinearVertical
+		},
+		SliderSpec{
+			&wetLevelSlider, &wetLevelLabel, "Wet level",
+			"Sets how much reverb you hear in the mix. Turn it up for a bigger effect, or down for a cleaner, drier sound.",
+			juce::Slider::RotaryHorizontalVerticalDrag
+		},
+		SliderSpec{
+			&dryLevelSlider, &dryLevelLabel, "Dry level",
+			"Sets how much of the original sound stays in the mix. Lower it if you want the reverb to stand out more.",
+			juce::Slider::RotaryHorizontalVerticalDrag
+		}
+	})
+	{
+	    addAndMakeVisible(*slider);
+	    addAndMakeVisible(*label);
 
-	addAndMakeVisible(widthLevelSlider);
-	addAndMakeVisible (widthLevelLabel);
-	widthLevelLabel.setText ("Width", juce::dontSendNotification);
-	widthLevelLabel.attachToComponent (&widthLevelSlider, false);
-	widthLevelSlider.setSliderStyle(juce::Slider::LinearVertical);
-	widthLevelSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 20);
-	widthLevelLabel.setJustificationType(juce::Justification::centred);
-	widthLevelSlider.setNumDecimalPlacesToDisplay(2);
-	widthLevelSlider.setTooltip("Width of the reverb impulse response");
+	    label->setText(text, juce::dontSendNotification);
+	    label->attachToComponent(slider, false);
+	    label->setJustificationType(juce::Justification::centred);
 
-	addAndMakeVisible(wetLevelSlider);
-	addAndMakeVisible (wetLevelLabel);
-	wetLevelLabel.setText ("Wet level", juce::dontSendNotification);
-	wetLevelLabel.attachToComponent (&wetLevelSlider, false);
-	wetLevelSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-	wetLevelSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 20);
-	wetLevelLabel.setJustificationType(juce::Justification::centred);
-	wetLevelSlider.setNumDecimalPlacesToDisplay(2);
-	wetLevelSlider.setTooltip("Wet level of the reverb impulse response");
-
-	addAndMakeVisible(dryLevelSlider);
-	addAndMakeVisible (dryLevelLabel);
-	dryLevelLabel.setText ("Dry level", juce::dontSendNotification);
-	dryLevelLabel.attachToComponent (&dryLevelSlider, false);
-	dryLevelSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-	dryLevelSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 20);
-	dryLevelLabel.setJustificationType(juce::Justification::centred);
-	dryLevelSlider.setNumDecimalPlacesToDisplay(2);
-	dryLevelSlider.setTooltip("Dry level of the reverb impulse response");
+	    slider->setSliderStyle(style);
+	    slider->setTextBoxStyle(juce::Slider::TextBoxBelow, false, 60, 20);
+	    slider->setNumDecimalPlacesToDisplay(2);
+	    slider->setTooltip(tooltip);
+	}
 
 	// Sets colors for sliders and knobs
 	const auto abletonOrange = juce::Colour(0xffff8800);
