@@ -1,6 +1,6 @@
 # GUIDELINES.md
 
-This was somewhat written by GitHub Copilot (but it does express my ideas pretty well).
+This was mostly written by me with some help from GitHub Copilot.
 
 ## Project Overview
 
